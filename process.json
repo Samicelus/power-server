@@ -1,0 +1,30 @@
+{
+  "apps": [
+    {
+      "name": "user-1",
+      "script": "./app.js",
+      "watch": false,
+      "error_file": "/data/logs/nodes/user-1-error.log",
+      "out_file": "/data/logs/nodes/user-1-out.log",
+      "env": {
+        "id": "user-1",
+        "server_type": "user",
+        "port": "13020",
+        "host": "127.0.0.1"
+      }
+    },
+    {
+      "name": "room-1",
+      "script": "./app.js",
+      "watch": false,
+      "error_file": "/data/logs/nodes/room-1-error.log",
+      "out_file": "/data/logs/nodes/room-1-out.log",
+      "env": {
+        "id": "room-1",
+        "server_type": "room",
+        "port": "13021",
+        "host": "127.0.0.1"
+      }
+    }
+  ]
+}
