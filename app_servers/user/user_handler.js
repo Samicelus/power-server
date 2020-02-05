@@ -15,7 +15,7 @@ handler.signin = async function(data, socket){
         password: auth.computeHash(password, serverConfig.salt)
     }).save();
     let token = await auth.generateToken(user._id.toString(), socket.id); 
-    return {result: true, token};
+    return {result: true, token, user_id: user._id};
 };
 
 handler.login = async function(data, socket){
@@ -24,12 +24,19 @@ handler.login = async function(data, socket){
     const user = await User.schema.findOne({
         username
     });
+    if(!user){
+        return {result: false};
+    }
     if(auth.comparePassword(password, user.password)){
         let token = await auth.generateToken(user._id.toString(), socket.id);
-        return {result: true, token};
+        return {result: true, token, user_id: user._id};
     }else{
         return {result: false};
     }
 };
+
+handler.test = async function(data, socket){
+    return {result: true};
+}
 
 module.exports = handler;

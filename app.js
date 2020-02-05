@@ -32,7 +32,6 @@ global.log = function(){
 
 let port = process.env.port;
 let io = require('socket.io')(port);
-log(`start worker ${process.env.id}...socket port:${port}`);
 global.socket_handler = new SocketHandler(io);
 io.on('connect',(socket)=>{
     log(`client with id [${socket.id}] connects to server`);
@@ -73,5 +72,18 @@ io.on('connect',(socket)=>{
         }
     })
 });
+
+//report to userServer
+if(process.env.server_type !== "user"){
+    const io_cli = require('socket.io-client');
+    const remoteIP = `localhost`;
+    const remotePort = `13020`;
+    
+    let socket = io(`http://${remoteIP}:${remotePort}`);
+}else{
+
+}
+
+
 
 module.exports = io;

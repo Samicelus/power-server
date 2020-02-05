@@ -21,6 +21,7 @@ socket.on('connect',()=>{
 
 socket.on('message',(data)=>{
     console.log(`receive data: ${JSON.stringify(data)}`);
+    console.log()
 })
 
 socket.on('reconnection_login',(data)=>{
@@ -30,7 +31,9 @@ socket.on('reconnection_login',(data)=>{
 
 let sent = {
     handler_name:"user_handler",
-    method: "login",
+    method: "test",
+    token:"748b73f0e6eae34e02be14cf1038fa763142488388417a153b62c11d0f69921d80eaa296b299f447349a97e353f3d373268342743c0f25241c22f195892fb526",
+    user_id:"5e37992b8e1ec704ecd7a710",
     data:{
         username: "sam",
         password: "123456"
