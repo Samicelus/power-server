@@ -79,7 +79,7 @@ if(process.env.server_type !== "user"){
     const remoteIP = `localhost`;
     const remotePort = `13020`;
     
-    let socket = io(`http://${remoteIP}:${remotePort}`);
+    let socket = io_cli(`http://${remoteIP}:${remotePort}`);
 }else{
 
 }
