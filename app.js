@@ -6,7 +6,7 @@ const ErrorCode = require(path.join(process.cwd(),'/const/error.js'))
 
 global.workers = {};
 global.log = function(){
-    process.stdout.write(`\x1B[42m[${process.env.server_id}]\x1B[49m `);
+    process.stdout.write(`\x1B[42m[${process.env.id}]\x1B[49m `);
     for(let i in arguments){
         switch(typeof arguments[i]){
             case "number":
@@ -33,6 +33,7 @@ global.log = function(){
 let port = process.env.port;
 let io = require('socket.io')(port);
 global.socket_handler = new SocketHandler(io);
+global.serverInfos = {};
 io.on('connect',(socket)=>{
     log(`client with id [${socket.id}] connects to server`);
     socket.emit("reconnection_login",{});
@@ -70,7 +71,36 @@ io.on('connect',(socket)=>{
                 method
             });
         }
-    })
+    });
+    if(process.env.server_type == "user"){
+        socket.on('server_regist', async (data_str)=>{
+            let data = {};
+            try{
+                data = JSON.parse(data_str);
+                handler_name = data.handler_name;
+                method = data.method;
+            }catch(e){
+                socket.send({
+                    type: `error`,
+                    code: ErrorCode.ParseError,
+                    message: `can't parse data`
+                });
+            }
+            if(!global.serverInfos[data.server_type]){
+                global.serverInfos[data.server_type] = {};
+            }
+
+            if(!global.serverInfos[data.server_type][data.id]){
+                global.serverInfos[data.server_type][data.id] = {};
+            }
+
+            global.serverInfos[data.server_type][data.id] = {
+                host: data.host,
+                port: data.port
+            };
+
+        });
+    }
 });
 
 //report to userServer
@@ -80,8 +110,16 @@ if(process.env.server_type !== "user"){
     const remotePort = `13020`;
     
     let socket = io_cli(`http://${remoteIP}:${remotePort}`);
-}else{
 
+    socket.on('connect',()=>{
+        let server_info = {
+            id: process.env.id,
+            server_type: process.env.server_type,
+            port: process.env.port,
+            host: process.env.host
+        };
+        socket.emit('server_regist', JSON.stringify(server_info));
+    })
 }
 
 

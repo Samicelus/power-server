@@ -1,6 +1,6 @@
 const io = require('socket.io-client');
 const remoteIP = `127.0.0.1`;
-const remotePort = `13020`;
+const remotePort = `13021`;
 
 let socket = io(`http://${remoteIP}:${remotePort}`);
 
@@ -29,14 +29,6 @@ let sent = {
     }
 }
 
-let sent = {
-    handler_name:"user_handler",
-    method: "login",
-    data:{
-        username: "sam",
-        password: "123456",
-    }
-}
 socket.send(JSON.stringify(sent), (data)=>{
     console.log(`ack data: ${data}`);
 })

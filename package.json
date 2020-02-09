@@ -15,6 +15,7 @@
   "author": "samicelus",
   "license": "ISC",
   "dependencies": {
+    "@hapi/joi": "^17.1.0",
     "bluebird": "^3.7.2",
     "koa": "^2.11.0",
     "mongoose": "^5.8.11",

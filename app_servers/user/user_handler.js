@@ -15,7 +15,7 @@ handler.signin = async function(data, socket){
         password: auth.computeHash(password, serverConfig.salt)
     }).save();
     let token = await auth.generateToken(user._id.toString(), socket.id); 
-    return {result: true, token, user_id: user._id};
+    return {result: true, token, user_id: user._id, servers: global.serverInfos};
 };
 
 handler.login = async function(data, socket){
@@ -25,13 +25,17 @@ handler.login = async function(data, socket){
         username
     });
     if(!user){
-        return {result: false};
+        let e = new Error(`user not found`);
+        e.code = ErrorCode.ErrorLogin;
+        throw e;
     }
     if(auth.comparePassword(password, user.password)){
         let token = await auth.generateToken(user._id.toString(), socket.id);
-        return {result: true, token, user_id: user._id};
+        return {result: true, token, user_id: user._id, servers: global.serverInfos};
     }else{
-        return {result: false};
+        let e = new Error(`username or password not correct`);
+        e.code = ErrorCode.ErrorLogin;
+        throw e;
     }
 };
 
