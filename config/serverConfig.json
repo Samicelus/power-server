@@ -1,4 +1,10 @@
 {
   "salt": "T3$97dgWkbz9*#s~==",
-  "cipher_secret": "bearGame"
+  "cipher_secret": "bearGame",
+  "white_list_api": [
+    "/api/user/login",
+    "/api/system/getCert",
+    "/api/system/uploadCert",
+    "/api/system/getDeviceInfo"
+  ]
 }

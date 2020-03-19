@@ -1,4 +1,4 @@
-const Country = require('./country.js');
+const Country = require('../domains/country.js');
 
 let country = {
     name: "中国",
