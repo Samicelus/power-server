@@ -1,6 +1,5 @@
 const BaseModel = require('../lib/baseModel.js');
 const model  = new BaseModel();
-
 // 卡组
 const _Schema = new model.Schema({
     name: {
@@ -10,6 +9,10 @@ const _Schema = new model.Schema({
     description: {
         type: String,
         required: true
+    },
+    count: {
+        type: Number,
+        default: 0
     },
     created: {
         type: Date,

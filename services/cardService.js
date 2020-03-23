@@ -9,24 +9,33 @@ let handlers = new BaseHandler();
 
 handlers.listCardSet = async function(ctx, next){
   let query = ctx.query;
-  let {name, page=1, pageSize=10} = query;
+  let {name, page=1, pageSize=10, sortField, sortOrder} = query;
   
   let condition = {};
   if(name){
     condition.name = {"$regex": name};
   }
+  let sort = {
+    "created": -1
+  }
+
+  if(sortField){
+    sort = {};
+    sort[sortField] = sortOrder == "ascend" ? 1: -1;  
+  }
+
   let list = await CardSet.schema.find(condition)
-  .select(`_id name description`)
-  .sort({"created":-1})
+  .select(`_id name description count`)
+  .sort(sort)
   .skip((Number(page)-1)*Number(pageSize))
   .limit(Number(pageSize))
   .lean();
 
   let count = await CardSet.schema.count(condition);
 
-  for(let item of list){
-    item.count = await Card.schema.count({set_oid: item._id});
-  }
+  // for(let item of list){
+  //   item.count = await Card.schema.count({set_oid: item._id});
+  // }
 
   return handlers.restSuccess(ctx, {list, page, pageSize, count});
 };
@@ -45,15 +54,31 @@ handlers.addCardSet = async function(ctx, next){
 
 handlers.listCards = async function(ctx, next){
   let query = ctx.query;
-  let {set_id, page=1, pageSize=10} = query;
-  
+  let {set_id, page=1, pageSize=10, sortField, sortOrder} = query;
+  let plantTypes = query["plantType[]"]
+
   let condition = {
     set_oid: mongoose.Types.ObjectId(set_id)
   };
 
+  if(plantTypes && Array.isArray(plantTypes)){
+    condition.plantType = {$in: plantTypes};
+  }
+
+  let sort = {
+    "created": -1
+  }
+
+  if(sortField){
+    sort = {};
+    sort[sortField] = sortOrder == "ascend" ? 1: -1;  
+  }
+
+  console.log(sort);
+
   let list = await Card.schema.find(condition)
   .select(`_id order plantType consume produce`)
-  .sort({"created":-1})
+  .sort(sort)
   .skip((Number(page)-1)*Number(pageSize))
   .limit(Number(pageSize))
   .lean();
@@ -133,6 +158,14 @@ handlers.editCard = async function(ctx, next){
   let card = await current.save();
 
   return handlers.restSuccess(ctx, card);
+};
+
+handlers.deleteCard = async function(ctx, next){
+  let params = ctx.params;
+  let {cardId} = params;
+  await Card.schema.findOneAndRemove({_id: mongoose.Types.ObjectId(cardId)});
+
+  return handlers.restSuccess(ctx, "success");
 };
 
 handlers.getCardDetail = async function(ctx, next){

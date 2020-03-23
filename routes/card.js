@@ -19,7 +19,9 @@ module.exports = (router, base)=>{
       query:Joi.object().keys({
         name: Joi.string().description('卡组名称'),
         page: Joi.number().min(1).optional(),
-        pageSize: Joi.number().min(1).max(200).optional()
+        pageSize: Joi.number().min(1).max(200).optional(),
+        sortField: Joi.string().description('排序字段'),
+        sortOrder: Joi.string().description('升降序')
       })
     },{
       method: 'get',
@@ -60,7 +62,10 @@ module.exports = (router, base)=>{
       query:Joi.object().keys({
         set_id: Joi.string().description('卡组id'),
         page: Joi.number().min(1).optional(),
-        pageSize: Joi.number().min(1).max(200).optional()
+        pageSize: Joi.number().min(1).max(200).optional(),
+        sortField: Joi.string().description('排序字段'),
+        sortOrder: Joi.string().description('升降序'),
+        "plantType[]": Joi.array().items(Joi.string().valid(...PLANTTYPES)).description('电厂类型'),
       })
     },{
       method: 'get',
@@ -115,6 +120,22 @@ module.exports = (router, base)=>{
       modules: ["card"]
     }),
     handler.editCard
+  );
+
+  //删除卡牌
+  router.delete(
+    `/api/${base}/:cardId/delete`,
+    access([
+      {module:"card",power:"remove"}
+    ]),
+    validate({   //配置参数校验权限
+    },{
+      method: 'delete',
+      description: '删除卡牌',
+      path: `/api/${base}/:cardId/delete`,
+      modules: ["card"]
+    }),
+    handler.deleteCard
   );
 
   //获取卡牌详情
