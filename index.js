@@ -9,7 +9,7 @@ const koaBody = require('koa-body');
 const cors = require('koa-cors');
 const main = serve(path.join(__dirname,'/public'));
 
-const swagger_host = "localhost:8933";
+const swagger_host = "localhost:12133";
 
 global.swaggerSpec = {
   "swagger": "2.0",
@@ -100,4 +100,4 @@ app.on('error',(err, ctx)=>{
   console.error('server error', err);
 })
 
-app.listen(serverConfig.port||12133);
+app.listen(process.env.port||12133);

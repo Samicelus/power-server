@@ -1,6 +1,16 @@
 {
   "apps": [
     {
+      "name": "server-api",
+      "script": "./index.js",
+      "watch": false,
+      "error_file": "/data/logs/nodes/server-api-error.log",
+      "out_file": "/data/logs/nodes/server-api-out.log",
+      "env": {
+        "port": "12133"
+      }
+    },
+    {
       "name": "user-1",
       "script": "./app.js",
       "watch": false,
