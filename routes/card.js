@@ -65,7 +65,7 @@ module.exports = (router, base)=>{
         pageSize: Joi.number().min(1).max(200).optional(),
         sortField: Joi.string().description('排序字段'),
         sortOrder: Joi.string().description('升降序'),
-        "plantType[]": Joi.array().items(Joi.string().valid(...PLANTTYPES)).description('电厂类型'),
+        "plantType[]": Joi.alternatives(Joi.array().items(Joi.string().valid(...PLANTTYPES)), Joi.string().valid(...PLANTTYPES)).description('电厂类型'),
       })
     },{
       method: 'get',

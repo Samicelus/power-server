@@ -61,8 +61,12 @@ handlers.listCards = async function(ctx, next){
     set_oid: mongoose.Types.ObjectId(set_id)
   };
 
-  if(plantTypes && Array.isArray(plantTypes)){
-    condition.plantType = {$in: plantTypes};
+  if(plantTypes){
+    if(Array.isArray(plantTypes)){
+      condition.plantType = {$in: plantTypes};
+    }else{
+      condition.plantType = plantTypes;
+    }
   }
 
   let sort = {
