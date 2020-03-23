@@ -9,7 +9,7 @@ const koaBody = require('koa-body');
 const cors = require('koa-cors');
 const main = serve(path.join(__dirname,'/public'));
 
-const swagger_host = "127.0.0.1:8933";
+const swagger_host = "localhost:8933";
 
 global.swaggerSpec = {
   "swagger": "2.0",
@@ -85,7 +85,7 @@ app.use(cors());
 
 const pre_middlewares = compose([errorHandler, main, swagger, koaBody({
   multipart: true,
-  uploadDir: process.env.KS_TMP_PATH || os.tmpdir()
+  uploadDir: os.tmpdir()
 }), logger, JWT.auth]);
 app.use(pre_middlewares);
 
